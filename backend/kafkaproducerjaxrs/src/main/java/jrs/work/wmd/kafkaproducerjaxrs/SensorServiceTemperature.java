@@ -50,7 +50,6 @@ public class SensorServiceTemperature {
 
 	               
 
-	                // Construct and send Temperature message
 	                String tempMessage = "{\"sensorId\": \"" + sensorId + "\", \"temperature\": " + temperature + "}";
 	                producer.send(new ProducerRecord<>(topicTemp, sensorId, tempMessage));
 
@@ -67,9 +66,8 @@ public class SensorServiceTemperature {
 	    }
 
 
-	    // Generates temperature values between 13°C and 29°C
 	    private int generateTemperatureValue() {
-	        return 13 + random.nextInt(17); // Ensures range [13, 29]
+	        return 13 + random.nextInt(17); 
 	    }
 	}
 

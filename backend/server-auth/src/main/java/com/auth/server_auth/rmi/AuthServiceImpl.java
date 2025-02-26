@@ -20,13 +20,11 @@ public class AuthServiceImpl extends UnicastRemoteObject implements AuthService 
     
     private void initializeDatabase() {
         try {
-            // Connect to MongoDB
+         
             MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
             
-            // Get or create database
             MongoDatabase database = mongoClient.getDatabase("authDB");
             
-            // Get or create collection
             boolean collectionExists = database.listCollectionNames()
                 .into(new java.util.ArrayList<>())
                 .contains("users");
@@ -34,8 +32,6 @@ public class AuthServiceImpl extends UnicastRemoteObject implements AuthService 
             if (!collectionExists) {
                 database.createCollection("users");
                 System.out.println("Created 'users' collection");
-                
-                // Create unique index on username
                 usersCollection = database.getCollection("users");
                 IndexOptions indexOptions = new IndexOptions().unique(true);
                 usersCollection.createIndex(new Document("username", 1), indexOptions);
@@ -45,7 +41,6 @@ public class AuthServiceImpl extends UnicastRemoteObject implements AuthService 
                 System.out.println("Connected to existing 'users' collection");
             }
             
-            // Test the connection
             usersCollection.countDocuments();
             System.out.println("Successfully connected to MongoDB");
             

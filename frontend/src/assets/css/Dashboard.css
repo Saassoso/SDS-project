@@ -1,9 +1,7 @@
-/* Dashboard Styles */
-
 
 .dashboard-wrapper {
-  width: 100%; /* Take full width to avoid flex effects */
-  display: block; /* Override flex behavior */
+  width: 100%; 
+  display: block; 
 }
 
 .dashboard-container {

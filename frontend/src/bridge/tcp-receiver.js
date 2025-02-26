@@ -1,13 +1,12 @@
 import net from "net";
-import { Server } from "socket.io"; // Use Socket.IO for WebSocket communication
+import { Server } from "socket.io"; 
 
 const TCP_PORT = 5001;
 const WS_PORT = 3001;
 
-// Create a Socket.IO server
 const io = new Server(WS_PORT, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:5173"], // Allow both ports
+    origin: ["http://localhost:3000", "http://localhost:5173"], 
     methods: ["GET", "POST"]
   }
 });
@@ -22,7 +21,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// Create TCP Server
 const server = net.createServer((socket) => {
   console.log("Connected to Java TCP Server");
 
@@ -30,7 +28,6 @@ const server = net.createServer((socket) => {
     const message = data.toString();
     console.log("Received alert:", message);
 
-    // Send alert to all connected React clients via Socket.IO
     io.emit("kafka-error", message);
   });
 

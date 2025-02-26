@@ -15,8 +15,8 @@ function App() {
           element={<Login setIsAuthenticated={setIsAuthenticated} />} 
         />
         <Route 
-          path="/register"  // Add the register route
-          element={<Register />}  // Render the Register page
+          path="/register" 
+          element={<Register />} 
         />
         <Route 
           path="/dashboard" 

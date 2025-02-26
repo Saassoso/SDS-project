@@ -50,7 +50,6 @@ public class SensorServiceph {
                 double ph = generatePhValue();
               
 
-                // Construct and send PH message
                 String phMessage = "{\"sensorId\": \"" + sensorId + "\", \"ph\": " + ph + "}";
                 producer.send(new ProducerRecord<>(topicPh, sensorId, phMessage));
 
@@ -67,10 +66,9 @@ public class SensorServiceph {
         }
     }
 
-    // Generates pH values centered around 6.5 with a natural variation
     private double generatePhValue() {
         double ph = 6.5 + random.nextGaussian() * 0.5;
-        return Math.max(5.5, Math.min(ph, 7.5)); // Ensures range [5.5, 7.5]
+        return Math.max(5.5, Math.min(ph, 7.5)); 
     }
 
  

@@ -10,7 +10,7 @@ function Dashboard() {
   const [error, setError] = useState("");
   const [kafkaError, setKafkaError] = useState("");
 
-  // Fetch sensor data from REST API
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,9 +28,8 @@ function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Connect to WebSocket server
   useEffect(() => {
-    const socket = io("http://localhost:3001"); // Connect to the correct bridge
+    const socket = io("http://localhost:3001"); 
   
     socket.on("connect", () => {
       console.log("Connected to Socket.IO Server");

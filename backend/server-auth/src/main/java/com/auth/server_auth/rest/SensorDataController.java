@@ -3,7 +3,7 @@ package com.auth.server_auth.rest;
 import com.auth.server_auth.config.MongoConfig;
 import com.mongodb.client.*;
 import org.bson.Document;
-import org.json.JSONObject; // Import for JSON parsing
+import org.json.JSONObject; 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -42,13 +42,13 @@ public class SensorDataController {
             for (Document doc : rawData) {
                 Document processedDoc = new Document();
 
-                // Convert timestamp to readable format
+                
                 if (doc.containsKey("timestamp")) {
                     long rawTimestamp = doc.getLong("timestamp");
                     processedDoc.append("timestamp", convertTimestamp(rawTimestamp));
                 }
 
-                // Parse the message field
+                
                 if (doc.containsKey("message")) {
                     try {
                         JSONObject jsonMessage = new JSONObject(doc.getString("message"));

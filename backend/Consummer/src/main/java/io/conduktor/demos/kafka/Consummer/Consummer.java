@@ -21,7 +21,7 @@ public class Consummer {
     private final MongoDBClient mongoDBClient;
     private final String tcpHost;
     private final int tcpPort;
-    private volatile boolean running = true;  // Flag for graceful shutdown
+    private volatile boolean running = true;  
 
     public Consummer(String bootstrapServers, String groupId, String[] topics, String mongoHost, String dbName, String collectionName, String tcpHost, int tcpPort) {
         Properties properties = KafkaConsumerConfig.createConsumerConfig(bootstrapServers, groupId);
@@ -34,8 +34,6 @@ public class Consummer {
     }
 
     public void startConsuming() {
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown)); // Handle shutdown
-
         try {
             while (running) {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
@@ -45,7 +43,6 @@ public class Consummer {
                     log.info("Key: " + record.key() + ", Value: " + record.value());
                     log.info("Partition: " + record.partition() + ", Offset: " + record.offset());
 
-                    // Store data in MongoDB
                     mongoDBClient.insertData(record.key(), record.value());
 
 
@@ -54,28 +51,28 @@ public class Consummer {
                             JSONObject json = new JSONObject(record.value()); 
                             if (json.has("temperature")) {
                                 double temp = json.getDouble("temperature");
-                                if (temp > 30 || temp < 15) { 
+                                if ((temp > 30 || temp < 15)) { 
                                     sendAlert("Critical temperature detected: " + temp + "°C");
                                 }
                             }
 
                             if (json.has("ph")) {
                                 double ph = json.getDouble("ph");
-                                if (ph < 6.0 || ph > 7.0) { // Stricter pH range
+                                if ((ph < 6.0 || ph > 7.0)) { 
                                     sendAlert("Abnormal pH level detected: " + ph);
                                 }
                             }
 
                             if (json.has("humidity")) {
                                 double humidity = json.getDouble("humidity");
-                                if (humidity < 55 || humidity > 75) { // Narrower range
+                                if ((humidity < 30 || humidity > 40)||(humidity < 80 || humidity > 90) ) { 
                                     sendAlert("Abnormal humidity detected: " + humidity + "%");
                                 }
                             }
 
                             if (json.has("soilmoisture")) {
                                 double soilMoisture = json.getDouble("soilmoisture");
-                                if (soilMoisture < 40 || soilMoisture > 55) { // Tighter soil moisture threshold
+                                if ((soilMoisture < 30 || soilMoisture > 40)||(soilMoisture < 80 || soilMoisture > 90)) { 
                                     sendAlert("Abnormal soil moisture detected: " + soilMoisture + "%");
                                 }
                             }
@@ -85,7 +82,7 @@ public class Consummer {
                         }
                     }
                 }
-                consumer.commitSync(); // Commit after processing
+                consumer.commitSync(); 
             }
         } catch (WakeupException e) {
             log.info("Consumer shutting down...");
@@ -106,12 +103,6 @@ public class Consummer {
         } catch (IOException e) {
             log.error("Failed to send TCP alert", e);
         }
-    }
-
-    public void shutdown() {
-        log.info("Shutdown signal received.");
-        running = false;
-        consumer.wakeup(); // Interrupt consumer loop
     }
 
     public static void main(String[] args) {
